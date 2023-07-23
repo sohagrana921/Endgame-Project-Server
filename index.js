@@ -25,7 +25,14 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const collegesCollection = client.db("endgameDb").collection("colleges");
-
+    const reviewsCollection = client.db("endgameDb").collection("review");
+    const researchPaperCollection = client
+      .db("endgameDb")
+      .collection("research-papers");
+    const selectedCollegesCollection = client
+      .db("endgameDb")
+      .collection("selectedColleges");
+    // colleges data
     app.get("/colleges", async (req, res) => {
       const result = await collegesCollection.find().toArray();
       res.send(result);
@@ -35,6 +42,27 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await collegesCollection.findOne(query);
+      res.send(result);
+    });
+
+    // review data
+    app.get("/review", async (req, res) => {
+      const result = await reviewsCollection.find().toArray();
+      res.send(result);
+    });
+    // research paper data
+    app.get("/researchPapers", async (req, res) => {
+      const result = await researchPaperCollection.find().toArray();
+      res.send(result);
+    });
+    // selected colleges
+    app.get("/selectedColleges", async (req, res) => {
+      const result = await selectedCollegesCollection.find().toArray();
+      res.send(result);
+    });
+    app.post("/selectedColleges", async (req, res) => {
+      const college = req.body;
+      const result = await selectedCollegesCollection.insertOne(college);
       res.send(result);
     });
     // Send a ping to confirm a successful connection
